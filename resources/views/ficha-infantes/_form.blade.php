@@ -208,6 +208,7 @@
             <div class="sm:col-span-6">
                 <label class="block text-sm font-medium text-gray-700">Dirección Residencial (Comunidad, Barrio o Zona) <span class="text-red-500">*</span></label>
                 <input type="text" name="direccion_residencia_encargado" value="{{ old('direccion_residencia_encargado', $fichaInfante->direccion_residencia_encargado ?? '') }}" @disabled(isset($readonly) && $readonly) class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-600">
+                 @error('direccion_residencia_encargado') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
             </div>
         </div>
     </div>
@@ -216,8 +217,24 @@
 <div class="pt-5 border-t mt-6 flex justify-end space-x-3">
     <a href="{{ route('ficha-infantes.index') }}" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition">Cancelar</a>
     @if(!$readonly)
-    <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition">Guardar Registro</button>
+    <button type="submit" 
+        :disabled="enviando" 
+        :class=" !enviando ? 'inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition'
+        : 'opacity-50 cursor-not-allowed'">
+    
+              <!-- Texto dinámico según el estado -->
+            <span x-show="!enviando">Guardar Registro</span>
+            <span x-show="enviando" x-cloak>Guardando...</span>
+
+    </button>
     @endif
+
+    </form>
+</div>
+
+
+
+
 </div>
 
 

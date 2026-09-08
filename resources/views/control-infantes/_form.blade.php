@@ -384,5 +384,4 @@
                     Guardar control
                 </button>
             </div>
-      
-            </div>
+        </div>
