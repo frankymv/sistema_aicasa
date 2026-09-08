@@ -3,12 +3,10 @@
     
         <div class="p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Editar Ficha de Infante</h2>
-            <div x-data="{ enviando: false }">
-            <form action="{{ route('ficha-infantes.update',$fichaInfante) }}" method="POST">
+            <form action="{{ route('ficha-infantes.update',$fichaInfante) }}" method="POST" x-data="{ enviando: false }" @submit="enviando = true">
                 @method('PUT')
                 @include('ficha-infantes._form', ['readonly' => false])
             </form>
-            </div>
         </div>
     </div>
 </x-app-layout>
