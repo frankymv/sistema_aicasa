@@ -378,10 +378,16 @@
                           text-gray-700 hover:bg-gray-50">
                     Cancelar
                 </a>
-                <button type="submit"
-                        class="rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold
-                               text-white shadow-sm hover:bg-indigo-700">
-                    Guardar control
+
+                @if(!$readonly)
+                <button type="submit" 
+                    :disabled="enviando" 
+                    :class="!enviando ? 'inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition'
+                    : 'inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-200 transition'">
+                        <!-- Texto dinámico según el estado -->
+                        <span x-show="!enviando">Guardar</span>
+                        <span x-show="enviando" x-cloak>Guardando...</span>
                 </button>
+                @endif
             </div>
         </div>

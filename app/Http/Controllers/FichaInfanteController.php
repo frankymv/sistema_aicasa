@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FichaInfante;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\StoreFichaInfanteRequest;
 
@@ -431,10 +433,22 @@ class FichaInfanteController extends Controller
      */
     public function store(StoreFichaInfanteRequest $request)
     {
+
+        $request->validated();
+        $userId = Auth::id() ?? $request->ip();
+        // Crea un bloqueo de 10 segundos para este usuario y esta acción
+        $lock = Cache::lock('guardar-datos-' . $userId, 5);
+        if ($lock->get()) {
+
         // El código_infante se genera solo en el modelo gracias al evento booted()
         FichaInfante::create($request->validated());
         return redirect()->route('ficha-infantes.index')
             ->with('success', 'Ficha del infante creada exitosamente.');
+
+    }
+        // Si el bloqueo ya existía, rechazamos la petición
+        return redirect()->back()->with('error', 'Ya estamos procesando tu solicitud. Por favor espera.');
+
     }
     /**
      * Display the specified resource.
@@ -448,8 +462,10 @@ class FichaInfanteController extends Controller
      */
     public function edit(FichaInfante $fichaInfante)
     {
+        
         $departamentosMunicipios = $this->departamentosMunicipios();
-        return view('ficha-infantes.edit', compact('fichaInfante','departamentosMunicipios'));
+       $municipioSeleccionado = $departamentosMunicipios[$fichaInfante->departamento_residencia_encargado] ?? [];
+        return view('ficha-infantes.edit', compact('fichaInfante','departamentosMunicipios','municipioSeleccionado'));
     }
     // 6. ACTUALIZAR: Guardar los cambios editados
     public function update(StoreFichaInfanteRequest $request, FichaInfante $fichaInfante)

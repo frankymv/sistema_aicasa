@@ -219,13 +219,11 @@
     @if(!$readonly)
     <button type="submit" 
         :disabled="enviando" 
-        :class=" !enviando ? 'inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition'
-        : 'opacity-50 cursor-not-allowed'">
-    
+        :class="!enviando ? 'inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition'
+        : 'inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-200 transition'">
               <!-- Texto dinámico según el estado -->
-            <span x-show="!enviando">Guardar Registro</span>
+            <span x-show="!enviando">Guardar</span>
             <span x-show="enviando" x-cloak>Guardando...</span>
-
     </button>
     @endif
 
@@ -237,74 +235,73 @@
 
 </div>
 
+  <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const datosGuatemala = @json($departamentosMunicipios);
+            const departamentoSelect =
+                document.getElementById(
+                    'departamento_residencia_encargado'
+                );
+            const municipioSelect =
+                document.getElementById(
+                    'municipio_residencia_encargado'
+                );
+            // Municipio que viene de la base de datos
+            const municipioSeleccionado = @json(
+                old(
+                    'municipio_residencia_encargado',
+                    $fichaInfante->municipio_residencia_encargado ?? ''
+                )
+            );
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const datosGuatemala = @json($departamentosMunicipios);
-        const departamentoSelect =
-            document.getElementById(
-                'departamento_residencia_encargado'
-            );
-        const municipioSelect =
-            document.getElementById(
-                'municipio_residencia_encargado'
-            );
-        // Municipio que viene de la base de datos
-        const municipioSeleccionado = @json(
-            old(
-                'municipio_residencia_encargado',
-                $fichaInfante->municipio_residencia_encargado ?? ''
-            )
-        );
-        function cargarMunicipios(departamento, municipioSeleccionado = '') {
-            // Limpiar municipios
-            municipioSelect.innerHTML = '';
-            // Opción inicial
-            const opcionInicial = document.createElement('option');
-            opcionInicial.value = '';
-            opcionInicial.textContent = 'Seleccione un municipio';
-            municipioSelect.appendChild(opcionInicial);
-            // Si no hay departamento
-            if (!departamento || !datosGuatemala[departamento]) {
-                municipioSelect.disabled = true;
-                return;
-            }
-            // Cargar municipios
-            datosGuatemala[departamento].forEach(function (municipio) {
-                const option = document.createElement('option');
-                option.value = municipio;
-                option.textContent = municipio;
-                // Seleccionar municipio guardado
-                if (municipio === municipioSeleccionado) {
-                    option.selected = true;
+            
+            function cargarMunicipios(departamento, municipioSeleccionado = '') {
+                // Limpiar municipios
+                municipioSelect.innerHTML = '';
+                // Opción inicial
+                const opcionInicial = document.createElement('option');
+                opcionInicial.value = '';
+                opcionInicial.textContent = 'Seleccione un municipio';
+                municipioSelect.appendChild(opcionInicial);
+                // Si no hay departamento
+                if (!departamento || !datosGuatemala[departamento]) {
+                    municipioSelect.disabled = true;
+                    return;
                 }
-                municipioSelect.appendChild(option);
-            });
-            municipioSelect.disabled = false;
-        }
-        // Cambio de departamento
-        departamentoSelect.addEventListener('change', function () {
+                // Cargar municipios
+                datosGuatemala[departamento].forEach(function (municipio) {
+                    const option = document.createElement('option');
+                    option.value = municipio;
+                    option.textContent = municipio;
+                    // Seleccionar municipio guardado
+                    if (municipio === municipioSeleccionado) {
+                        option.selected = true;
+                    }
+                    municipioSelect.appendChild(option);
+                });
+                municipioSelect.disabled = false;
+            }
+            // Cambio de departamento
+            departamentoSelect.addEventListener('change', function () {
 
-            cargarMunicipios(this.value);
+                cargarMunicipios(this.value);
+
+            });
+
+
+            // Cargar automáticamente al editar
+            if (departamentoSelect.value) {
+
+                cargarMunicipios(
+                    departamentoSelect.value,
+                    municipioSeleccionado
+                );
+            } else {
+                municipioSelect.disabled = true;
+            }
 
         });
 
+    </script>
 
-        // Cargar automáticamente al editar
-        if (departamentoSelect.value) {
-
-            cargarMunicipios(
-                departamentoSelect.value,
-                municipioSeleccionado
-            );
-
-        } else {
-
-            municipioSelect.disabled = true;
-
-        }
-
-    });
-
-</script>
 

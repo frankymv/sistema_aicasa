@@ -25,7 +25,10 @@
         @endif
          <form method="POST"
               action="{{ route('infante.stores',$infante) }}"
-              class="space-y-6">
+              class="space-y-6"
+              x-data="{ enviando: false }" 
+              @submit="enviando = true">
+              >
                @include('control-infantes._form', ['readonly' => false])
             </form>
         </div>
