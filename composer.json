@@ -28,8 +28,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-            "files": [
-        "app/helpers/ControlInfanteHelper.php"
+        "files": [
+            "app/Helpers/ControlInfanteHelper.php"
         ]
     },
     "autoload-dev": {
