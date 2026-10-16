@@ -14,7 +14,7 @@ class StoreFichaInfanteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre_infante' => 'required|string|max:255',
+            'nombre_infante' => 'required|string|max:100',
             'sexo_infante' => 'required|in:Masculino,Femenino',
             'fecha_nacimiento_infante' => 'required|date|before_or_equal:today',
             'fecha_inscripcion_infante' => 'nullable|date',

@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ControlInfante extends Model
 {
@@ -25,6 +26,9 @@ class ControlInfante extends Model
         'indicador_pt_control',
         'evolucion_control',
         'producto_control',
+        'prueba_apetito_infante',
+        'examen_cognitivo_infante',
+        'producto_id'
     ];
 
     protected $casts = [
@@ -66,5 +70,13 @@ class ControlInfante extends Model
             'meses' => $diferencia->m,
             'dias' => $diferencia->d,
         ];
+    }
+
+    public function producto(): BelongsTo
+    {
+        return $this->belongsTo(
+        Producto::class,
+        'producto_id'
+    );
     }
 }

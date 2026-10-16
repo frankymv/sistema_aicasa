@@ -15,6 +15,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Livewire Styles -->
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -31,14 +33,13 @@
 
             <!-- Page Content -->
             <main class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
-                
-                {{ $slot }}
-                        </div>
-
-            </div>
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
+                        {{ $slot }}
+                    </div>
+                </div>
             </main>
         </div>
+        @livewireScriptConfig
     </body>
 </html>

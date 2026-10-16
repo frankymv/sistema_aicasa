@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ControlInfante;
 use App\Models\FichaInfante;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -11,30 +12,7 @@ class ControlInfanteController extends Controller
 {
     /*
      * Display a listing of the resource.
-     
-    public function index()
-    {
-
-        $controles = ControlInfante::with('infante')->get();
-
-        return view('control-infantes.index', compact(
-            'controles'
-      
-        ));
-        
-    }
-
-        public function index()
-    {
-        $controles = ControlInfante::with('infante')
-            ->orderBy('numero_control')
-            ->get();
-
-        $infantes = $controles
-            ->groupBy('codigo_infante');
-
-        return view('control-infantes.index', compact('infantes'));
-    }*/
+    */
     public function index(Request $request)
     {
         // Obtener todos los infantes para el SELECT
@@ -64,11 +42,12 @@ class ControlInfanteController extends Controller
      */
     public function create(Request $request)
     {
+        $productos=Producto::all();
          $id = $request->input('id');
         $infante = FichaInfante::find($id);
-        
+
         return view('control-infantes.create', compact(
-            'infante',
+            'infante','productos'
         ));
     }
 
@@ -77,6 +56,8 @@ class ControlInfanteController extends Controller
      */
     public function store(Request $request, FichaInfante $infante)
     {
+
+
        // dd($request);
         $request->validate([
             'peso_actual_control' => [
@@ -181,6 +162,7 @@ class ControlInfanteController extends Controller
         |--------------------------------------------------------------------------
         */
 
+
         ControlInfante::create([
 
             'ficha_infante_id' => $infante->id,
@@ -210,6 +192,8 @@ class ControlInfanteController extends Controller
             'evolucion_control' => $request->evolucion_control,
 
             'producto_control' => $request->producto_control,
+
+            'producto_id' => $request->producto_id
         ]);
 
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\StoreFichaInfanteRequest;
+use App\Models\ControlInfante;
 
 class FichaInfanteController extends Controller
 {
@@ -414,14 +415,13 @@ class FichaInfanteController extends Controller
     // 1. LISTAR: Mostrar todos los infantes registrados
     public function index()
     {
+
         $infantes = FichaInfante::latest()->paginate(10);
         return view('ficha-infantes.index',[
                 'infantes' => $infantes
             ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $departamentosMunicipios = $this->departamentosMunicipios();
@@ -433,7 +433,6 @@ class FichaInfanteController extends Controller
      */
     public function store(StoreFichaInfanteRequest $request)
     {
-
         $request->validated();
         $userId = Auth::id() ?? $request->ip();
         // Crea un bloqueo de 10 segundos para este usuario y esta acción
@@ -441,10 +440,37 @@ class FichaInfanteController extends Controller
         if ($lock->get()) {
 
         // El código_infante se genera solo en el modelo gracias al evento booted()
-        FichaInfante::create($request->validated());
+        $data=FichaInfante::create($request->validated());
+
+        //dd(calcular_peso_ideal(11.28,8,"Femenino")); 8.8382614820172
+        //dd(calcular_indicador_PE(11.28,8,"Femenino")); normal
+        //dd(calcular_talla_ideal(11.28,68,"Femenino")); 73.481571219066
+        //dd(calcular_indicador_TE(11.28,68,"Femenino")); RC. Moderado
+        //dd(calcular_indicador_PT(11.28,68,8,"Femenino")); normal PT
+
+
+        ControlInfante::create([
+        'ficha_infante_id' => $data->id,
+        'numero_control' => 1,
+        'anios_edad_control' => $data->edad_detallada_ingreso->anios,
+        'meses_edad_control' => $data->edad_detallada_ingreso->meses,
+        'dia_edad_control' => $data->edad_detallada_ingreso->dias,
+        'peso_actual_control' => $data->peso_infante,
+        'peso_ideal_control' => calcular_peso_ideal($data->edad_detallada_ingreso->meses, $data->peso_infante,$data->sexo_infante),
+        'indicador_pe_control' => calcular_indicador_PE($data->edad_detallada_ingreso->meses, $data->peso_infante,$data->sexo_infante),
+        'talla_actual_control' => $data->talla_infante,
+        'talla_ideal_control' => calcular_talla_ideal($data->edad_detallada_ingreso->meses,$data->talla_infante,$data->sexo_infante),
+        'indicador_te_control' => calcular_indicador_TE($data->edad_detallada_ingreso->meses,$data->talla_infante,$data->sexo_infante),
+        'indicador_pt_control' => calcular_indicador_PT($data->edad_detallada_ingreso->meses,$data->talla_infante, $data->peso_infante,$data->sexo_infante),
+        'evolucion_control' => "Sin Registro",
+        'producto_control' => null,
+        'prueba_apetito_infante'=>$data->prueba_apetito_infante,
+        'examen_cognitivo_infante'=>$data->examen_cognitivo_infante
+        ]);
+
+
         return redirect()->route('ficha-infantes.index')
             ->with('success', 'Ficha del infante creada exitosamente.');
-
     }
         // Si el bloqueo ya existía, rechazamos la petición
         return redirect()->back()->with('error', 'Ya estamos procesando tu solicitud. Por favor espera.');
@@ -453,24 +479,47 @@ class FichaInfanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FichaInfante $fichaInfante)
+    public function show(StoreFichaInfanteRequest $fichaInfante)
     {
-           return view('ficha-infantes.show', compact('fichaInfante'));
+        $departamentosMunicipios = $this->departamentosMunicipios();
+        return view('ficha-infantes.show', compact('fichaInfante','departamentosMunicipios'));
     }
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(FichaInfante $fichaInfante)
     {
-        
         $departamentosMunicipios = $this->departamentosMunicipios();
-       $municipioSeleccionado = $departamentosMunicipios[$fichaInfante->departamento_residencia_encargado] ?? [];
+        $municipioSeleccionado = $departamentosMunicipios[$fichaInfante->departamento_residencia_encargado] ?? [];
         return view('ficha-infantes.edit', compact('fichaInfante','departamentosMunicipios','municipioSeleccionado'));
     }
     // 6. ACTUALIZAR: Guardar los cambios editados
     public function update(StoreFichaInfanteRequest $request, FichaInfante $fichaInfante)
     {
         $fichaInfante->update($request->validated());
+
+        ControlInfante::updateOrCreate(
+            ['ficha_infante_id' => $fichaInfante->id,'numero_control'=>1],
+            [
+            'ficha_infante_id',
+            'numero_control',
+            'anios_edad_control',
+            'meses_edad_control',
+            'dia_edad_control',
+            'peso_actual_control',
+            'peso_ideal_control',
+            'indicador_pe_control',
+            'talla_actual_control',
+            'talla_ideal_control',
+            'indicador_te_control',
+            'indicador_pt_control',
+            'evolucion_control',
+            'producto_control',
+            'prueba_apetito_infante',
+            'examen_cognitivo_infante',
+            'producto_id'
+            ]);
+
         return redirect()->route('ficha-infantes.index')
             ->with('success', 'Ficha del infante actualizada correctamente.');
     }
@@ -483,4 +532,43 @@ class FichaInfanteController extends Controller
         return redirect()->route('ficha-infantes.index')
             ->with('success', 'Ficha eliminada correctamente.');
     }
+
+    function calcularValor($edadMeses, $pesoActual, $valorIngreso, $ad4, $ad5)
+    {
+        if (
+            $edadMeses === null || $edadMeses === '' ||
+            $pesoActual === null || $pesoActual === '' ||
+            $valorIngreso === null || $valorIngreso === ''
+        ) {
+            return '';
+        }
+
+        if ($valorIngreso == $ad4) {
+
+            return
+                -0.000000007609727 * pow($edadMeses, 6) +
+                0.000001539999866 * pow($edadMeses, 5) -
+                0.000122171657464 * pow($edadMeses, 4) +
+                0.004816763029197 * pow($edadMeses, 3) -
+                0.099284220070331 * pow($edadMeses, 2) +
+                1.21338663018105  * $edadMeses +
+                3.30113045958933;
+        }
+
+        if ($valorIngreso == $ad5) {
+
+            return
+                -0.000000006292863 * pow($edadMeses, 6) +
+                0.000001279878154 * pow($edadMeses, 5) -
+                0.000102250431935 * pow($edadMeses, 4) +
+                0.004063203439273 * pow($edadMeses, 3) -
+                0.084174576571058 * pow($edadMeses, 2) +
+                1.06472820507588  * $edadMeses +
+                3.14128424260161;
+        }
+
+        return 'YYY';
+    }
+
+
 }

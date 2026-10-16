@@ -31,7 +31,6 @@
 
         </div>
 
-
         {{-- ========================================================= --}}
         {{-- MENSAJE --}}
         {{-- ========================================================= --}}
@@ -39,20 +38,26 @@
 
             <div class="flex items-start gap-3 rounded-xl border border-emerald-200
                         bg-emerald-50 p-4 text-emerald-800">
-
                 <div>
                     <p class="font-semibold">
                         Operación exitosa
                     </p>
-
                     <p class="text-sm">
                         {{ session('success') }}
                     </p>
                 </div>
-
             </div>
 
         @endif
+
+
+        @if(session('success'))
+            <x-frk.alert type="success" title="¡Éxito!">
+                {{ session('success') }}
+            </x-frk.alert>
+        @endif
+
+
 
 
         {{-- ========================================================= --}}
@@ -155,18 +160,18 @@
                     {{-- ================================================= --}}
 
                    <div class="flex flex-col gap-6 border-b border-gray-200 bg-gray-50 p-5 md:flex-row md:items-center md:justify-between">
-    
+
                     <!-- Contenedor de las Tarjetas (Grid de 3x2) -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
-                        
+
                         <!-- FILA UP - Card 1: Nombre -->
                         <div class="flex items-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                             <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             </div>
                             <div>
-    
-                                <p class="text-base font-bold text-gray-900">{{ $infante->nombre_infante }}</p>                            
+
+                                <p class="text-base font-bold text-gray-900">{{ $infante->nombre_infante }}</p>
                                 <p class="text-base font-mono font-bold text-indigo-600">{{ $infante->codigo_infante }}</p>
                             </div>
                         </div>
@@ -273,20 +278,17 @@
 
 
 
-               
+
                         <!-- Contenedor de las mini cards en horizontal -->
-                  
-                    
+
+
 
                     {{-- ================================================= --}}
                     {{-- TABLA DE CONTROLES --}}
                     {{-- ================================================= --}}
                     <div class="overflow-x-auto">
-
                         <table class="min-w-full divide-y divide-gray-200">
-
                             <thead class="bg-white">
-
                                 <tr>
                                     <th class="px-6 py-4 text-center text-xs
                                                font-semibold uppercase
@@ -298,33 +300,42 @@
                                                tracking-wider text-gray-500">
                                         Edad
                                     </th>
-
                                     <th class="px-6 py-4 text-center text-xs
                                                font-semibold uppercase
                                                tracking-wider text-gray-500">
                                         Peso
                                     </th>
-
                                     <th class="px-6 py-4 text-center text-xs
                                                font-semibold uppercase
                                                tracking-wider text-gray-500">
                                         Talla
                                     </th>
-
+                                    <th class="px-6 py-4 text-center text-xs
+                                               font-semibold uppercase
+                                               tracking-wider text-gray-500">
+                                        Indicador P/T
+                                    </th>
                                     <th class="px-6 py-4 text-center text-xs
                                                font-semibold uppercase
                                                tracking-wider text-gray-500">
                                         Evolución
                                     </th>
-
+                                    <th class="px-6 py-4 text-center text-xs
+                                               font-semibold uppercase
+                                               tracking-wider text-gray-500">
+                                        Pruebas
+                                    </th>
+                                    <th class="px-6 py-4 text-center text-xs
+                                               font-semibold uppercase
+                                               tracking-wider text-gray-500">
+                                        Producto
+                                    </th>
                                     <th class="px-6 py-4 text-center text-xs
                                                font-semibold uppercase
                                                tracking-wider text-gray-500">
                                         Acciones
                                     </th>
-
                                 </tr>
-
                             </thead>
 
 
@@ -338,14 +349,11 @@
                                         {{-- CONTROL --}}
                                         {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
-
                                             <span class="inline-flex items-center
                                                          rounded-full bg-indigo-100
                                                          px-4 py-2 text-xs
                                                          font-bold text-indigo-700">
-
                                                 #{{ $control->numero_control }}
-
                                             </span>
 
                                         </td>
@@ -355,12 +363,8 @@
                                         {{-- EDAD --}}
                                         {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
-
                                             <div class="text-sm font-semibold text-gray-700">
-
-                                                {{ $control->anios_edad_control }}
-                                                años
-
+                                                {{ $control->anios_edad_control }} años
                                             </div>
 
                                             <div class="text-xs text-gray-400">
@@ -374,17 +378,21 @@
                                             </div>
 
                                         </td>
-
-
                                         {{-- ================================= --}}
                                         {{-- PESO --}}
                                         {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
-
                                             <div class="font-semibold text-gray-800">
-
-                                                {{ number_format(
+                                                Actual: {{ number_format(
                                                     $control->peso_actual_control,
+                                                    2
+                                                ) }}
+                                                kg
+
+                                            </div>
+                                            <div class="font-semibold text-gray-800">
+                                                Ideal {{ number_format(
+                                                    $control->peso_ideal_control,
                                                     2
                                                 ) }}
                                                 kg
@@ -392,52 +400,51 @@
                                             </div>
 
                                             @if($control->indicador_pe_control)
-
                                                 <span class="text-xs text-gray-400">
-
-                                                    {{ $control->indicador_pe_control }}
-
+                                                    Indicador P/E: {{ $control->indicador_pe_control }}
                                                 </span>
-
                                             @endif
-
                                         </td>
-
-
                                         {{-- ================================= --}}
                                         {{-- TALLA --}}
                                         {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
 
                                             <div class="font-semibold text-gray-800">
-
-                                                {{ number_format(
+                                                Actual: {{ number_format(
                                                     $control->talla_actual_control,
                                                     2
                                                 ) }}
-
                                             </div>
-
+                                            <div class="font-semibold text-gray-800">
+                                                Ideal: {{ number_format(
+                                                    $control->talla_ideal_control,
+                                                    2
+                                                ) }}
+                                            </div>
                                             @if($control->indicador_te_control)
-
                                                 <span class="text-xs text-gray-400">
-
-                                                    {{ $control->indicador_te_control }}
-
+                                                    Indicador T/E: {{ $control->indicador_te_control }}
                                                 </span>
-
                                             @endif
-
                                         </td>
+                                        {{-- ================================= --}}
+                                        {{-- indicador p/t --}}
+                                        {{-- ================================= --}}
+                                        <td class="px-6 py-5 text-center">
 
+                                            <div class="text-gray-800">
+                                                {{
+                                                    $control->indicador_pt_control,
 
+                                                }}
+                                            </div>
+                                        </td>
                                         {{-- ================================= --}}
                                         {{-- EVOLUCIÓN --}}
                                         {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
-
                                             @php
-
                                                 $claseEvolucion = match(
                                                     $control->evolucion_control
                                                 ) {
@@ -456,24 +463,45 @@
 
                                                     default =>
                                                         'bg-gray-50 text-gray-700',
-
                                                 };
-
                                             @endphp
-
-
                                             <span class="inline-flex rounded-full
                                                          px-3 py-1 text-xs
                                                          font-semibold
                                                          {{ $claseEvolucion }}">
-
                                                 {{ $control->evolucion_control }}
-
                                             </span>
-
                                         </td>
 
+                                        {{-- ================================= --}}
+                                        {{-- PRUEBAS --}}
+                                        {{-- ================================= --}}
+                                        <td class="px-6 py-5 text-center">
 
+                                            <div class="text-gray-800">
+                                                Apetito: {{ number_format(
+                                                    $control->prueba_apetito_infante,
+                                                    2
+                                                ) }} %
+                                            </div>
+                                            <div class="text-gray-800">
+                                                Cognitivo: {{ number_format(
+                                                    $control->examen_cognitivo_infante,
+                                                    2
+                                                ) }} %
+                                            </div>
+                                        </td>
+                                         {{-- ================================= --}}
+                                        {{-- PRODUCTO --}}
+                                        {{-- ================================= --}}
+                                        <td class="px-6 py-5 text-center">
+
+                                            <span class="inline-flex rounded-full
+                                                         px-3 py-1 text-xs
+                                                         font-semibold">
+                                                {{ $control->producto_control }}
+                                            </span>
+                                        </td>
                                         {{-- ================================= --}}
                                         {{-- ACCIONES --}}
                                         {{-- ================================= --}}

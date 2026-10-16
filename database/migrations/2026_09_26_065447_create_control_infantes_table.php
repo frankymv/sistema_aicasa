@@ -74,7 +74,7 @@ return new class extends Migration
             |--------------------------------------------------------------------------
             | Indicador Talla / Edad
             |--------------------------------------------------------------------------
-            */
+
             $table->enum('indicador_te_control', [
                 'RC. Severo',
                 'RC. Moderado',
@@ -84,6 +84,8 @@ return new class extends Migration
                 'DC. Moderada',
                 'DC. Severa'
             ])->nullable();
+            */
+            $table->string('indicador_te_control');
 
             /*
             |--------------------------------------------------------------------------
@@ -123,6 +125,11 @@ return new class extends Migration
                 'Atol'
             ])->nullable();
 
+
+
+            $table->integer('prueba_apetito_infante')->nullable(); // Guardado como entero (porcentaje)
+            $table->integer('examen_cognitivo_infante')->nullable(); // Guardado como entero (porcentaje)
+
             /*
             |--------------------------------------------------------------------------
             | Índices
@@ -148,7 +155,13 @@ return new class extends Migration
             | ficha_infante.codigo_infante debe tener índice UNIQUE.
             |
             */
-  
+
+
+            $table->foreignId('producto_id')
+                ->nullable()
+                ->constrained('productos')
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

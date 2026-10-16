@@ -1,0 +1,35 @@
+{{-- resources/views/components/select.blade.php --}}
+@props([
+    'label',
+    'name',
+    'readonly' => false,
+    'required' => false
+])
+
+<div>
+    @if(isset($label))
+        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700">
+            {{ $label }}
+            @if($required)
+                <span class="text-red-500">*</span>
+            @endif
+        </label>
+    @endif
+    
+    <select 
+        name="{{ $name }}" 
+        id="{{ $name }}"
+        @disabled($readonly) 
+        @required($required)
+        {{ $attributes->merge([
+            'class' => 'mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border disabled:bg-gray-100 disabled:text-gray-600 ' . 
+            ($errors->has($name) ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300')
+        ]) }}
+    >
+        {{ $slot }}
+    </select>
+
+    @error($name) 
+        <p class="mt-1 text-xs text-red-500">{{ $message }}</p> 
+    @enderror
+</div>

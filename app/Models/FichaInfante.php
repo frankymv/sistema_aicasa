@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class FichaInfante extends Model
 {
@@ -40,10 +41,48 @@ class FichaInfante extends Model
         });
     }
 
-  
 
     public function controles(){
          return $this->hasMany(ControlInfante::class);
+    }
+
+
+    public function getEdadDetalladaActualAttribute()
+    {
+        if (!$this->fecha_nacimiento_infante) {
+            return (object) ['anios' => 0, 'meses' => 0, 'dias' => 0];
+        }
+
+        $nacimiento = Carbon::parse($this->fecha_nacimiento_infante);
+        $hoy = Carbon::now();
+
+        // diff() devuelve un objeto DateInterval con las propiedades y, m, d
+        $diferencia = $nacimiento->diff($hoy);
+
+        return (object) [
+            'anios' => $diferencia->y,
+            'meses' => $diferencia->m,
+            'dias'  => $diferencia->d,
+        ];
+    }
+
+        public function getEdadDetalladaIngresoAttribute()
+    {
+        if (!$this->fecha_nacimiento_infante) {
+            return (object) ['anios' => 0, 'meses' => 0, 'dias' => 0];
+        }
+
+        $nacimiento = Carbon::parse($this->fecha_nacimiento_infante);
+        $inscripcion = Carbon::parse($this->fecha_inscripcion_infante);
+
+        // diff() devuelve un objeto DateInterval con las propiedades y, m, d
+        $diferencia = $nacimiento->diff($inscripcion);
+
+        return (object) [
+            'anios' => $diferencia->y,
+            'meses' => $diferencia->m,
+            'dias'  => $diferencia->d,
+        ];
     }
 
 }
