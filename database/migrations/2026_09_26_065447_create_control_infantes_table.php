@@ -107,7 +107,7 @@ return new class extends Migration
             | Evolución
             |--------------------------------------------------------------------------
             */
-            $table->enum('evolucion_control', [
+            $table->enum('evolucion_control', ['Sin Registro',
                 'Mejoria',
                 'Normal',
                 'Sin mejora',
