@@ -28,7 +28,8 @@ class ControlInfante extends Model
         'producto_control',
         'prueba_apetito_infante',
         'examen_cognitivo_infante',
-        'producto_id'
+        'producto_id',
+        'fecha_control_infante'
     ];
 
     protected $casts = [

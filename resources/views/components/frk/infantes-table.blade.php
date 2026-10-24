@@ -119,14 +119,6 @@
                         <h3 class="text-lg font-semibold text-gray-900">
                             No hay infantes registrados
                         </h3>
-
-                        <p class="mt-1 text-sm text-gray-500">
-                            Comienza registrando el primer infante en el sistema.
-                        </p>
-
-                        {{ route('ficha-infantes.create') }}
-                            Registrar primer infante
-                        </a>
                     </td>
                 </tr>
             @endforelse

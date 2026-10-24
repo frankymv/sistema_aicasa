@@ -92,118 +92,12 @@
     </div>
     {{-- PESO --}}
 
-    <livewire:components.peso-ficha-infante :infante="$infante" />
-    {{-- TALLA --}}
-    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-
-        <h2 class="text-lg font-bold text-gray-900">
-            3. Talla
-        </h2>
-
-        <div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
-
-            <div>
-
-                <label class="text-sm font-semibold text-gray-700">
-                    Talla actual *
-                </label>
-
-                <input type="number"
-                    name="talla_actual_control"
-                    step="0.01"
-                    min="0"
-                    value="{{ old('talla_actual_control') }}"
-                    required
-                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
 
 
-            <div>
+    <livewire:components.peso-ficha-infante :infante="$infante" :fecha_control_infante="old('fecha_control_infante') ?? date('Y-m-d')" />
 
-                <label class="text-sm font-semibold text-gray-700">
-                    Talla ideal
-                </label>
 
-                <input type="number"
-                    name="talla_ideal_control"
-                    step="0.01"
-                    min="0"
-                    value="{{ old('talla_ideal_control') }}"
-                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-700">
-                    Indicador T/E
-                </label>
 
-                <select name="indicador_te_control"
-                    class="mt-2 w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-
-                    <option value="">
-                        Seleccione
-                    </option>
-
-                    @foreach([
-                    'RC. Severo',
-                    'RC. Moderado',
-                    'Riesgo RC',
-                    'C. Adecuado',
-                    'Riesgo DC',
-                    'DC. Moderada',
-                    'DC. Severa'
-                    ] as $opcion)
-                    <option value="{{ $opcion }}"
-                        {{ old('indicador_te_control') == $opcion ? 'selected' : '' }}>
-                        {{ $opcion }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
-
-    {{-- P/T --}}
-    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900">
-            4. Indicador Peso / Talla
-        </h2>
-        <div class="mt-5">
-
-            <label class="text-sm font-semibold text-gray-700">
-                Indicador P/T
-            </label>
-
-            <select name="indicador_pt_control"
-                class="mt-2 w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-
-                <option value="">
-                    Seleccione
-                </option>
-
-                @foreach([
-                'DA Severa',
-                'DA Moderada',
-                'Riesgo DA',
-                'Normal',
-                'Riesgo SP',
-                'Sobrepeso',
-                'Obesidad'
-                ] as $opcion)
-
-                <option value="{{ $opcion }}"
-                    {{ old('indicador_pt_control') == $opcion ? 'selected' : '' }}>
-
-                    {{ $opcion }}
-
-                </option>
-
-                @endforeach
-
-            </select>
-
-        </div>
-
-    </div>
 
     {{-- EVOLUCIÓN --}}
     <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">

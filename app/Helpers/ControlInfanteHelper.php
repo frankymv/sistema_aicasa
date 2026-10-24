@@ -12,25 +12,21 @@ if (!function_exists('calcular_peso_ideal')) {
      * @param string $sexo (Ingreso!$J3)
      * @return float|string Valor calculado o string vacío / "YYY" según validaciones
      */
-    function calcular_peso_ideal($edadMeses, $pesoActual, string $sexo)
+    function calcular_peso_ideal($edadMeses, string $sexo)
     {
         // SI(G3="";""; ...)
         if ($edadMeses === '' || $edadMeses === null) {
             return '';
         }
 
-        // SI(I3="";""; ...)
-        if ($pesoActual === '' || $pesoActual === null) {
-            return '';
-        }
 
         // SI(Ingreso!$J3="";""; ...)
         if (empty($sexo)) {
             return '';
         }
-
+    $sexoNormalizado = trim(strtolower($sexo));
         // SI(Ingreso!$J3=Soporte!$AD$4; ... [Masculino / Hombre])
-        if ($sexo === 'Masculino' || $sexo === 'Hombre') {
+        if ($sexoNormalizado === 'masculino' ) {
             return -0.000000007609727 * pow($edadMeses, 6)
                 + 0.000001539999866 * pow($edadMeses, 5)
                 - 0.000122171657464 * pow($edadMeses, 4)
@@ -41,7 +37,7 @@ if (!function_exists('calcular_peso_ideal')) {
         }
 
         // SI(Ingreso!$J3=Soporte!$AD$5; ... [Femenino / Mujer])
-        if ($sexo === 'Femenino' || $sexo === 'Mujer') {
+        if ($sexoNormalizado === 'femenino' ) {
             return -0.000000006292863 * pow($edadMeses, 6)
                 + 0.000001279878154 * pow($edadMeses, 5)
                 - 0.000102250431935 * pow($edadMeses, 4)
@@ -66,7 +62,7 @@ if (!function_exists('calcular_indicador_PE')) {
      * @param mixed $pesoActual (I3)
      * @return string Diagnóstico final o string vacío si faltan datos
      */
-    function calcular_indicador_PE($edadMeses, $pesoActual, string $sexo): string
+    function calcular_indicador_PE($edadMeses, string $sexo,$pesoActual): string
 
     {
         // Validaciones iniciales de celdas vacías: =SI($C3="";"";SI(G3="";"";SI(I3="";"";...)))
@@ -74,7 +70,9 @@ if (!function_exists('calcular_indicador_PE')) {
             return '';
         }
 
-        if ($sexo === 'Mujer' || $sexo === 'Femenino') {
+        $sexoNormalizado = trim(strtolower($sexo));
+
+        if ($sexoNormalizado === 'femenino') {
             $pbSevero = -0.0000000049242 * pow($edadMeses, 6)
                 + 0.000001005949595 * pow($edadMeses, 5)
                 - 0.000080433281976 * pow($edadMeses, 4)
@@ -195,12 +193,9 @@ if (!function_exists('calcular_talla_ideal')) {
      * @param string $sexo (Ingreso!$J3)
      * @return float|string Valor calculado o string vacío / "YYY" según validaciones
      */
-    function calcular_talla_ideal($edadMeses, $tallaActual,  string $sexo)
+    function calcular_talla_ideal($edadMeses,   string $sexo)
     {
-        // SI(M3="";""; ...)
-        if ($tallaActual === '' || $tallaActual === null) {
-            return '';
-        }
+
 
         // SI(G3="";""; ...)
         if ($edadMeses === '' || $edadMeses === null) {
@@ -212,8 +207,10 @@ if (!function_exists('calcular_talla_ideal')) {
             return '';
         }
 
+          $sexoNormalizado = trim(strtolower($sexo));
+
         // SI(Ingreso!$J3=Soporte!$AD$4; ... [Masculino / Hombre])
-        if ($sexo === 'Masculino' || $sexo === 'Hombre') {
+        if ($sexoNormalizado === 'masculino' ) {
             return (-0.000000019182666 * pow($edadMeses, 6))
                 + (0.000003904956694 * pow($edadMeses, 5))
                 - (0.000313354106538 * pow($edadMeses, 4))
@@ -224,7 +221,7 @@ if (!function_exists('calcular_talla_ideal')) {
         }
 
         // SI(Ingreso!$J3=Soporte!$AD$5; ... [Femenino / Mujer])
-        if ($sexo === 'Femenino' || $sexo === 'Mujer') {
+        if ($sexoNormalizado === 'femenino' ) {
             return (-0.000000014481834 * pow($edadMeses, 6))
                 + (0.000002955982953 * pow($edadMeses, 5))
                 - (0.000239406272513 * pow($edadMeses, 4))
@@ -249,8 +246,9 @@ if (!function_exists('calcularIndicadorTERC')) {
         if (empty($sexo) || $edadMeses === '' || $edadMeses === null || $tallaActual === '' || $tallaActual === null) {
             return '';
         }
+          $sexoNormalizado = trim(strtolower($sexo));
 
-        if ($sexo === 'Femenino') {
+        if ($sexoNormalizado === 'femenino') {
             $severo = -0.000000012813168 * pow($edadMeses, 6) + 0.000002641583674 * pow($edadMeses, 5) - 0.00021698316295 * pow($edadMeses, 4) + 0.009125567624324 * pow($edadMeses, 3) - 0.214238689683043 * pow($edadMeses, 2) + 3.44485699628422 * $edadMeses + 44.2115168580203;
             $moderado = -0.000000013192789 * pow($edadMeses, 6) + 0.000002713690453 * pow($edadMeses, 5) - 0.000222183517099 * pow($edadMeses, 4) + 0.009302634346682 * pow($edadMeses, 3) - 0.217317264050507 * pow($edadMeses, 2) + 3.52437351096887 * $edadMeses + 46.0737518161623;
             $riesgo = -0.000000013806519 * pow($edadMeses, 6) + 0.000002832902234 * pow($edadMeses, 5) - 0.000230995546627 * pow($edadMeses, 4) + 0.009608442910803 * pow($edadMeses, 3) - 0.222451054143676 * pow($edadMeses, 2) + 3.61559694077005 * $edadMeses + 47.9300741360494;
@@ -278,7 +276,9 @@ if (!function_exists('calcularIndicadorPTDC')) {
             return '';
         }
 
-        if ($sexo === 'Femenino') {
+        $sexoNormalizado = trim(strtolower($sexo));
+
+        if ($sexoNormalizado === 'femenino') {
             $severo = -0.000000012813168 * pow($edadMeses, 6) + 0.000002641583674 * pow($edadMeses, 5) - 0.00021698316295 * pow($edadMeses, 4) + 0.009125567624324 * pow($edadMeses, 3) - 0.214238689683043 * pow($edadMeses, 2) + 3.44485699628422 * $edadMeses + 44.2115168580203;
             $moderado = -0.000000013192789 * pow($edadMeses, 6) + 0.000002713690453 * pow($edadMeses, 5) - 0.000222183517099 * pow($edadMeses, 4) + 0.009302634346682 * pow($edadMeses, 3) - 0.217317264050507 * pow($edadMeses, 2) + 3.52437351096887 * $edadMeses + 46.0737518161623;
             $riesgo = -0.000000013806519 * pow($edadMeses, 6) + 0.000002832902234 * pow($edadMeses, 5) - 0.000230995546627 * pow($edadMeses, 4) + 0.009608442910803 * pow($edadMeses, 3) - 0.222451054143676 * pow($edadMeses, 2) + 3.61559694077005 * $edadMeses + 47.9300741360494;
@@ -308,10 +308,12 @@ if (!function_exists('calcular_indicador_TE')) {
             return '';
         }
 
+        $sexoNormalizado = trim(strtolower($sexo));
+
         // Si la edad es menor o igual a 24 meses, ejecuta TERC (O3). De lo contrario, ejecuta PTDC (P3)
         return $edadMeses <= 24
-            ? calcularIndicadorTERC($sexo, $edadMeses, $tallaActual)
-            : calcularIndicadorPTDC($sexo, $edadMeses, $tallaActual);
+            ? calcularIndicadorTERC($sexoNormalizado, $edadMeses, $tallaActual)
+            : calcularIndicadorPTDC($sexoNormalizado, $edadMeses, $tallaActual);
     }
 }
 
@@ -327,7 +329,7 @@ if (!function_exists('calcularIndicadorDA_Menores2Anios')) {
             return '';
         }
 
-        if ($sexo === 'Mujer' || $sexo === 'Femenino') {
+        if ($sexo === 'femenino') {
             $severa   = 0.00000000166682 * pow($tallaActual, 6) - 0.000000804245751 * pow($tallaActual, 5) + 0.000159414116335 * pow($tallaActual, 4) - 0.016576061821854 * pow($tallaActual, 3) + 0.951569747994553 * pow($tallaActual, 2) - 28.3675208647057 * $tallaActual + 342.962548331626;
             $moderada = 0.000000001635155 * pow($tallaActual, 6) - 0.000000791631085 * pow($tallaActual, 5) + 0.000157478203938 * pow($tallaActual, 4) - 0.016432869888545 * pow($tallaActual, 3) + 0.946458092509792 * pow($tallaActual, 2) - 28.2818907847799 * $tallaActual + 342.445392327538;
             $riesgo   = 0.00000000200653 * pow($tallaActual, 6) - 0.000000969586057 * pow($tallaActual, 5) + 0.0001924420381 * pow($tallaActual, 4) - 0.020029699005793 * pow($tallaActual, 3) + 1.15034918163045 * pow($tallaActual, 2) - 34.2931272449181 * $tallaActual + 414.420846051292;

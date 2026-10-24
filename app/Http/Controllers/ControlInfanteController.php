@@ -13,6 +13,14 @@ class ControlInfanteController extends Controller
     /*
      * Display a listing of the resource.
     */
+
+    public $pesoactualcontrol;
+
+public function mount()
+{
+    // Carga el valor old o déjalo vacío/cero por defecto
+    $this->pesoactualcontrol = old('peso_actual_control', '');
+}
     public function index(Request $request)
     {
         // Obtener todos los infantes para el SELECT

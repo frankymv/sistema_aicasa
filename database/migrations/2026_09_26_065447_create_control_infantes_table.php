@@ -161,6 +161,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('productos')
                 ->cascadeOnDelete();
+            $table->date('fecha_control_infante')->useCurrent();
 
             $table->timestamps();
         });

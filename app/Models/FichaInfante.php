@@ -66,7 +66,7 @@ class FichaInfante extends Model
         ];
     }
 
-        public function getEdadDetalladaIngresoAttribute()
+    public function getEdadDetalladaIngresoAttribute()
     {
         if (!$this->fecha_nacimiento_infante) {
             return (object) ['anios' => 0, 'meses' => 0, 'dias' => 0];
@@ -84,5 +84,50 @@ class FichaInfante extends Model
             'dias'  => $diferencia->d,
         ];
     }
+
+
+    /* devuelve diferencia de la edad con la fecha de control
+    public function edadDetalladaControl($fecha)
+    {
+
+        if (!$fecha) {
+            return (object) [
+                'anios' => 0,
+                'meses' => 0,
+                'dias' => 0
+            ];
+        }
+
+        $diferencia = Carbon::parse($this->fecha_nacimiento_infante)->diff(Carbon::parse($fecha));
+
+        return (object) [
+            'anios' => $diferencia->y,
+            'meses' => $diferencia->m,
+            'dias' => $diferencia->d,
+        ];
+    }
+        */
+
+    public function edadDetalladaControl($fecha)
+{
+    if (!$fecha || !$this->fecha_nacimiento_infante) {
+        return 0.0;
+    }
+
+    $nacimiento = Carbon::parse($this->fecha_nacimiento_infante);
+    $control = Carbon::parse($fecha);
+
+    if ($control->lessThan($nacimiento)) {
+        return 0.0;
+    }
+
+    $diferencia = $nacimiento->diff($control);
+
+    $totalMeses = ($diferencia->y * 12) + $diferencia->m;
+    $fraccionMes = $diferencia->d / 30.44;
+
+    // Retorna estrictamente el número decimal (float)
+    return (float) round($totalMeses + $fraccionMes, 1);
+}
 
 }

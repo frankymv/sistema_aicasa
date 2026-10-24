@@ -339,284 +339,229 @@
                             </thead>
 
 
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-gray-100 bg-white">
 
                                 @foreach($controles as $control)
 
-                                    <tr class="transition hover:bg-indigo-50/40">
+                                    @php
+                                        $claseEvolucion = match($control->evolucion_control) {
+                                            'Mejoria' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                            'Normal' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                            'Sin mejora' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                            'Desnutricion' => 'bg-red-100 text-red-700 border-red-200',
+                                            default => 'bg-gray-100 text-gray-700 border-gray-200',
+                                        };
+                                    @endphp
 
-                                        {{-- ================================= --}}
+                                    <tr
+                                        class="transition-all duration-300 hover:bg-indigo-50/30 hover:shadow-sm">
+
                                         {{-- CONTROL --}}
-                                        {{-- ================================= --}}
                                         <td class="px-6 py-5 text-center">
-                                            <span class="inline-flex items-center
-                                                         rounded-full bg-indigo-100
-                                                         px-4 py-2 text-xs
-                                                         font-bold text-indigo-700">
-                                                #{{ $control->numero_control }}
+                                            <div class="flex justify-center">
+                                                <span
+                                                    class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold shadow-md">
+                                                    #{{ $control->numero_control }}
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        {{-- EDAD --}}
+                                        <td class="px-6 py-5 text-center">
+                                            <div class="rounded-xl bg-gray-50 p-3">
+                                                <div class="text-lg font-bold text-gray-800">
+                                                    {{ $control->anios_edad_control }}
+                                                </div>
+
+                                                <div class="text-xs text-gray-500">
+                                                    años
+                                                </div>
+
+                                                <div class="mt-2 text-sm text-gray-600">
+                                                    {{ $control->meses_edad_control }} meses
+                                                </div>
+
+                                                <div class="text-sm text-gray-600">
+                                                    {{ $control->dia_edad_control }} días
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {{-- PESO --}}
+                                        <td class="px-2 py-4">
+                                            <div class="space-y-2">
+
+                                                <div class="rounded-xl bg-blue-50 p-1 border border-blue-100">
+                                                    <p class="text-xs font-semibold uppercase text-blue-500">
+                                                        Actual
+                                                    </p>
+
+                                                    <p class="text-xs font-bold text-blue-700">
+                                                        {{ number_format($control->peso_actual_control,2) }} kg
+                                                    </p>
+                                                </div>
+
+                                                <div class="rounded-xl bg-emerald-50 p-1 border border-emerald-100">
+                                                    <p class="text-xs font-semibold uppercase text-emerald-500">
+                                                        Ideal
+                                                    </p>
+
+                                                    <p class="text-xs font-bold text-emerald-700">
+                                                        {{ number_format($control->peso_ideal_control,2) }} kg
+                                                    </p>
+                                                </div>
+
+                                                @if($control->indicador_pe_control)
+                                                    <div class="text-center">
+                                                        <span
+                                                            class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                                            P/E: {{ $control->indicador_pe_control }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+
+                                            </div>
+                                        </td>
+
+                                        {{-- TALLA --}}
+                                        <td class="px-2 py-4">
+                                            <div class="space-y-2">
+
+                                                <div class="rounded-xl bg-cyan-50 p-1 border border-cyan-100">
+                                                    <p class="text-xs font-semibold uppercase text-cyan-500">
+                                                        Actual
+                                                    </p>
+
+                                                    <p class="text-xs font-bold text-cyan-700">
+                                                        {{ number_format($control->talla_actual_control,2) }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="rounded-xl bg-green-50 p-1 border border-green-100">
+                                                    <p class="text-xs font-semibold uppercase text-green-500">
+                                                        Ideal
+                                                    </p>
+
+                                                    <p class="text-xs font-bold text-green-700">
+                                                        {{ number_format($control->talla_ideal_control,2) }}
+                                                    </p>
+                                                </div>
+
+                                                @if($control->indicador_te_control)
+                                                    <div class="text-center">
+                                                        <span
+                                                            class="inline-flex rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                                                            T/E: {{ $control->indicador_te_control }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+
+                                            </div>
+                                        </td>
+
+                                        {{-- INDICADOR P/T --}}
+                                        <td class="px-6 py-5 text-center">
+
+                                            @php
+                                                $colorPT = match($control->indicador_pt_control) {
+                                                    'Obesidad' => 'bg-red-100 text-red-700',
+                                                    'Sobrepeso' => 'bg-orange-100 text-orange-700',
+                                                    'Adecuado' => 'bg-green-100 text-green-700',
+                                                    default => 'bg-gray-100 text-gray-700',
+                                                };
+                                            @endphp
+
+                                            <span
+                                                class="inline-flex rounded-full px-4 py-2 text-sm font-semibold {{ $colorPT }}">
+                                                {{ $control->indicador_pt_control }}
                                             </span>
 
                                         </td>
 
-
-                                        {{-- ================================= --}}
-                                        {{-- EDAD --}}
-                                        {{-- ================================= --}}
+                                        {{-- EVOLUCION --}}
                                         <td class="px-6 py-5 text-center">
-                                            <div class="text-sm font-semibold text-gray-700">
-                                                {{ $control->anios_edad_control }} años
-                                            </div>
-
-                                            <div class="text-xs text-gray-400">
-
-                                                {{ $control->meses_edad_control }}
-                                                meses
-
-                                                {{ $control->dia_edad_control }}
-                                                días
-
-                                            </div>
-
-                                        </td>
-                                        {{-- ================================= --}}
-                                        {{-- PESO --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
-                                            <div class="font-semibold text-gray-800">
-                                                Actual: {{ number_format(
-                                                    $control->peso_actual_control,
-                                                    2
-                                                ) }}
-                                                kg
-
-                                            </div>
-                                            <div class="font-semibold text-gray-800">
-                                                Ideal {{ number_format(
-                                                    $control->peso_ideal_control,
-                                                    2
-                                                ) }}
-                                                kg
-
-                                            </div>
-
-                                            @if($control->indicador_pe_control)
-                                                <span class="text-xs text-gray-400">
-                                                    Indicador P/E: {{ $control->indicador_pe_control }}
-                                                </span>
-                                            @endif
-                                        </td>
-                                        {{-- ================================= --}}
-                                        {{-- TALLA --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
-
-                                            <div class="font-semibold text-gray-800">
-                                                Actual: {{ number_format(
-                                                    $control->talla_actual_control,
-                                                    2
-                                                ) }}
-                                            </div>
-                                            <div class="font-semibold text-gray-800">
-                                                Ideal: {{ number_format(
-                                                    $control->talla_ideal_control,
-                                                    2
-                                                ) }}
-                                            </div>
-                                            @if($control->indicador_te_control)
-                                                <span class="text-xs text-gray-400">
-                                                    Indicador T/E: {{ $control->indicador_te_control }}
-                                                </span>
-                                            @endif
-                                        </td>
-                                        {{-- ================================= --}}
-                                        {{-- indicador p/t --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
-
-                                            <div class="text-gray-800">
-                                                {{
-                                                    $control->indicador_pt_control,
-
-                                                }}
-                                            </div>
-                                        </td>
-                                        {{-- ================================= --}}
-                                        {{-- EVOLUCIÓN --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
-                                            @php
-                                                $claseEvolucion = match(
-                                                    $control->evolucion_control
-                                                ) {
-
-                                                    'Mejoria' =>
-                                                        'bg-emerald-50 text-emerald-700',
-
-                                                    'Normal' =>
-                                                        'bg-blue-50 text-blue-700',
-
-                                                    'Sin mejora' =>
-                                                        'bg-amber-50 text-amber-700',
-
-                                                    'Desnutricion' =>
-                                                        'bg-red-50 text-red-700',
-
-                                                    default =>
-                                                        'bg-gray-50 text-gray-700',
-                                                };
-                                            @endphp
-                                            <span class="inline-flex rounded-full
-                                                         px-3 py-1 text-xs
-                                                         font-semibold
-                                                         {{ $claseEvolucion }}">
+                                            <span
+                                                class="inline-flex rounded-full border px-4 py-2 text-xs font-bold {{ $claseEvolucion }}">
                                                 {{ $control->evolucion_control }}
                                             </span>
                                         </td>
 
-                                        {{-- ================================= --}}
                                         {{-- PRUEBAS --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
+                                        <td class="px-6 py-5 min-w-[220px]">
 
-                                            <div class="text-gray-800">
-                                                Apetito: {{ number_format(
-                                                    $control->prueba_apetito_infante,
-                                                    2
-                                                ) }} %
+                                            <div class="space-y-4">
+
+                                                {{-- APETITO --}}
+                                                <div>
+                                                    <div class="mb-1 flex justify-between text-xs">
+                                                        <span class="font-medium text-gray-600">
+                                                            Apetito
+                                                        </span>
+
+                                                        <span class="font-bold text-green-600">
+                                                            {{ number_format($control->prueba_apetito_infante,2) }}%
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="h-2 overflow-hidden rounded-full bg-gray-200">
+                                                        <div
+                                                            class="h-full rounded-full bg-green-500"
+                                                            style="width: {{ $control->prueba_apetito_infante }}%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {{-- COGNITIVO --}}
+                                                <div>
+                                                    <div class="mb-1 flex justify-between text-xs">
+                                                        <span class="font-medium text-gray-600">
+                                                            Cognitivo
+                                                        </span>
+
+                                                        <span class="font-bold text-blue-600">
+                                                            {{ number_format($control->examen_cognitivo_infante,2) }}%
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="h-2 overflow-hidden rounded-full bg-gray-200">
+                                                        <div
+                                                            class="h-full rounded-full bg-blue-500"
+                                                            style="width: {{ $control->examen_cognitivo_infante }}%">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                            <div class="text-gray-800">
-                                                Cognitivo: {{ number_format(
-                                                    $control->examen_cognitivo_infante,
-                                                    2
-                                                ) }} %
-                                            </div>
+
                                         </td>
-                                         {{-- ================================= --}}
-                                        {{-- PRODUCTO --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5 text-center">
 
-                                            <span class="inline-flex rounded-full
-                                                         px-3 py-1 text-xs
-                                                         font-semibold">
+                                        {{-- PRODUCTO --}}
+                                        <td class="px-6 py-5 text-center">
+                                            <span
+                                                class="inline-flex rounded-full bg-violet-100 px-4 py-2 text-xs font-semibold text-violet-700">
+
                                                 {{ $control->producto_control }}
+
                                             </span>
                                         </td>
-                                        {{-- ================================= --}}
+
                                         {{-- ACCIONES --}}
-                                        {{-- ================================= --}}
-                                        <td class="px-6 py-5">
+                                        <td class="px-2 py-4">
 
-                                            <div class="flex items-center
-                                                        justify-center gap-2">
-
+                                            <div class="flex items-center justify-center gap-2">
                                                 {{-- VER --}}
-                                                <a href="{{ route(
-                                                    'control-infantes.show',
-                                                    $control
-                                                ) }}"
-                                                   title="Ver control"
-                                                   class="flex h-9 w-9 items-center
-                                                          justify-center rounded-lg
-                                                          border border-gray-200
-                                                          text-gray-500 transition
-                                                          hover:border-indigo-200
-                                                          hover:bg-indigo-50
-                                                          hover:text-indigo-600">
-
-                                                    <svg class="h-4 w-4"
-                                                         fill="none"
-                                                         stroke="currentColor"
-                                                         viewBox="0 0 24 24">
-
-                                                        <path stroke-linecap="round"
-                                                              stroke-linejoin="round"
-                                                              stroke-width="2"
-                                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-
-                                                        <path stroke-linecap="round"
-                                                              stroke-linejoin="round"
-                                                              stroke-width="2"
-                                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-
-                                                    </svg>
-
-                                                </a>
-
-
+                                                <x-frk.button-table-show
+                                                    :href="route('ficha-infantes.show', $infante)"
+                                                    title="Ver ficha" />
                                                 {{-- EDITAR --}}
-                                                <a href="{{ route(
-                                                    'control-infantes.edit',
-                                                    $control
-                                                ) }}"
-                                                   title="Editar control"
-                                                   class="flex h-9 w-9 items-center
-                                                          justify-center rounded-lg
-                                                          border border-gray-200
-                                                          text-gray-500 transition
-                                                          hover:border-amber-200
-                                                          hover:bg-amber-50
-                                                          hover:text-amber-600">
-
-                                                    <svg class="h-4 w-4"
-                                                         fill="none"
-                                                         stroke="currentColor"
-                                                         viewBox="0 0 24 24">
-
-                                                        <path stroke-linecap="round"
-                                                              stroke-linejoin="round"
-                                                              stroke-width="2"
-                                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-
-                                                    </svg>
-
-                                                </a>
-
-
+                                                <x-frk.button-table-edit
+                                                    :href="route('ficha-infantes.edit', $infante)"
+                                                    title="Editar ficha" />
                                                 {{-- ELIMINAR --}}
-                                                <form action="{{ route(
-                                                    'control-infantes.destroy',
-                                                    $control
-                                                ) }}"
-                                                      method="POST"
-                                                      onsubmit="return confirm(
-                                                        '¿Seguro que deseas eliminar este control?'
-                                                      );">
-
-                                                    @csrf
-
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                            title="Eliminar control"
-                                                            class="flex h-9 w-9
-                                                                   items-center
-                                                                   justify-center
-                                                                   rounded-lg
-                                                                   border
-                                                                   border-gray-200
-                                                                   text-gray-500
-                                                                   transition
-                                                                   hover:border-red-200
-                                                                   hover:bg-red-50
-                                                                   hover:text-red-600">
-
-                                                        <svg class="h-4 w-4"
-                                                             fill="none"
-                                                             stroke="currentColor"
-                                                             viewBox="0 0 24 24">
-
-                                                            <path stroke-linecap="round"
-                                                                  stroke-linejoin="round"
-                                                                  stroke-width="2"
-                                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-
-                                                        </svg>
-
-                                                    </button>
-
-                                                </form>
-
+                                                <x-frk.button-table-delete
+                                                    :action="route('ficha-infantes.destroy', $infante)"
+                                                    title="Eliminar ficha"
+                                                    message="¿Seguro que deseas eliminar permanentemente esta ficha?" />
                                             </div>
 
                                         </td>
@@ -625,7 +570,7 @@
 
                                 @endforeach
 
-                            </tbody>
+                                </tbody>
 
                         </table>
 
